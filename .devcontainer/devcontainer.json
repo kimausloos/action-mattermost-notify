@@ -1,0 +1,16 @@
+{
+  "name": "Node 20",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "remoteUser": "node",
+  "forwardPorts": [],
+  "postCreateCommand": "npm install"
+}
