@@ -31,7 +31,13 @@ inputs:
     default: mattermost.json
     deprecationMessage:
       This input is deprecated. Please migrate to TEXT or PAYLOAD variable
-
+outputs:
+  status_code:
+    description: 'The HTTP status code returned by Mattermost'
+  message_id:
+    description: 'The ID of the sent message'
+  channel_id:
+    description: 'The ID of the channel where the message was sent'
 runs:
   using: node20
   main: dist/index.js
