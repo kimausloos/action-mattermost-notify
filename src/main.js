@@ -21,7 +21,11 @@ async function run() {
 
     const finalPayload = await generatePayload(inputs)
     core.debug(`${JSON.stringify(finalPayload, undefined, 4)}`)
-    await sendNotification(inputs.webhookURL, finalPayload)
+    output = await sendNotification(inputs.webhookURL, finalPayload)
+    
+    core.setOutput('status_code', output.status_code)
+    core.setOutput('message_id', output.message_id)
+    core.setOutput('channel_id', output.channel_id)
   } catch (error) {
     core.setFailed(error.message)
   }
@@ -32,19 +36,19 @@ async function sendNotification(webhookURL, payload) {
   const response = await client.post(webhookURL, JSON.stringify(payload))
   await response.readBody()
 
-  const status_code = response.message.statusCode
-  const message_id = response.message.id
-  const channel_id = response.message.channel_id
-
-  core.setOutput('status_code', response.message.statusCode)
-  core.setOutput('message_id', response.message.id)
-  core.setOutput('channel_id', response.message.channel_id) 
+  const outputs = {
+    status_code: response.message.statusCode,
+    message_id: response.message.id,
+    channel_id: response.message.channel_id,
+  }
 
   if (response.message.statusCode === 200) {
     core.info('Successfully sent notification!')
   } else {
     core.error(`Unexpected status code: ${response.message.statusCode}`)
   }
+
+  return outputs
 }
 
 async function generatePayload(inputs) {
