@@ -34,12 +34,13 @@ async function run() {
 async function sendNotification(webhookURL, payload) {
   const client = new http.HttpClient()
   const response = await client.post(webhookURL, JSON.stringify(payload))
-  await response.readBody()
+  const bodyString = await response.readBody()
+  const body = JSON.parse(bodyString)
 
   const outputs = {
     status_code: response.message.statusCode,
-    message_id: response.message.id,
-    channel_id: response.message.channel_id,
+    message_id: body.id,
+    channel_id: body.channel_id,
   }
 
   if (response.message.statusCode === 200) {
