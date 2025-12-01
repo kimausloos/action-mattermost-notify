@@ -34,12 +34,20 @@ async function sendNotification(webhookURL, payload) {
   const client = new http.HttpClient()
   const response = await client.post(webhookURL, JSON.stringify(payload))
   const bodyString = await response.readBody()
-  const body = JSON.parse(bodyString)
+
+  let body = {}
+  if (bodyString && bodyString.trim() !== 'ok') {
+    try {
+      body = JSON.parse(bodyString)
+    } catch (error) {
+      core.debug(`Response body is not valid JSON: ${bodyString}`)
+    }
+  }
 
   const outputs = {
     status_code: response.message.statusCode,
     message_id: body.id,
-    channel_id: body.channel_id,
+    channel_id: body.channel_id
   }
 
   if (response.message.statusCode === 200) {
