@@ -20,9 +20,8 @@ async function run() {
     }
 
     const finalPayload = await generatePayload(inputs)
-    core.debug(`${JSON.stringify(finalPayload, undefined, 4)}`)
-    output = await sendNotification(inputs.webhookURL, finalPayload)
-    
+    const output = await sendNotification(inputs.webhookURL, finalPayload)
+
     core.setOutput('status_code', output.status_code)
     core.setOutput('message_id', output.message_id)
     core.setOutput('channel_id', output.channel_id)
