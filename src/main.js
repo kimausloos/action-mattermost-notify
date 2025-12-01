@@ -32,11 +32,14 @@ async function sendNotification(webhookURL, payload) {
   const response = await client.post(webhookURL, JSON.stringify(payload))
   await response.readBody()
 
+  core.setOutput('status_code', response.message.statusCode)
+  core.setOutput('message_id', response.message.id)
+  core.setOutput('channel_id', response.message.channel_id) 
+  
   if (response.message.statusCode === 200) {
     core.info('Successfully sent notification!')
   } else {
     core.error(`Unexpected status code: ${response.message.statusCode}`)
-    throw new Error(`${response.message.statusMessage}`)
   }
 }
 
